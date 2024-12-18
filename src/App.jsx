@@ -7,6 +7,11 @@ function App() {
   const [file, setFile] = useState(null);
   const [audioStream, setAudioStream] = useState(null);
 
+  function handleAudioReset() {
+    setFile(null);
+    setAudioStream(null);
+  }
+
   const isAudioAvailable = file || audioStream; 
 
   return (
@@ -14,9 +19,9 @@ function App() {
       <section className='min-h-screen flex flex-col'>
         <Header/>
         {isAudioAvailable ? (
-          <FileDisplay/>  
+          <FileDisplay handleAudioReset={handleAudioReset} file={file} audioStream={setAudioStream} />  
         ) : (
-        <HomePage setFile={setFile} setAudioStream={setAudioStream}/>
+          <HomePage setFile={setFile} setAudioStream={setAudioStream}/>
         )}
       </section>
       <h1 className=''></h1>

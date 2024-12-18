@@ -6,7 +6,7 @@ export default function Header() {
       <h1 className="font-medium">
         Vibe<span className="text-teal-500 bold">Scribe</span>
       </h1>
-      <button className="flex items-center gap-2">
+      <button className="flex items-center gap-2 specialBtn px-4 py-2 rounded-lg text-teal-400">
         <p>New</p>
         <i className="fa-solid fa-plus"></i>
       </button>

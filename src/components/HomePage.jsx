@@ -26,6 +26,7 @@ export default function HomePage(props) {
       console.log(err.message);
       return
     }
+    setRecordingStatus('recording');
 
     // create new Media Recorder instance using the stream
     const media = new MediaRecorder(tempStream, { type: mimeType });
@@ -40,6 +41,18 @@ export default function HomePage(props) {
       localAudioChunks.push(event.data);
     }
     setAudioChunks(localAudioChunks);
+  }
+
+  async function stopRecording() {
+    setRecordingStatus('inactive');
+    console.log('Stop recording');
+
+    mediaRecorder.current.stop();
+    mediaRecorder.current.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
+      setAudioStream(audioBlob);
+      setAudioChunks([]);
+    }
   }
 
   return (

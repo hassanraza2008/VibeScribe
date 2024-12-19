@@ -55,6 +55,16 @@ export default function HomePage(props) {
     }
   }
 
+  useEffect(()=> {
+    if(recordingStatus === 'inactive') {return}
+
+    const interval = setInterval(() => {
+      setDuration(curr => curr + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  })
+
   return (
     <main className='flex-1 p-4 flex flex-col gap-3 sm:gap-4 md:gap-5 text-center justify-center pb-20'>
         <h1 className='font-semibold text-5xl sm:text-6xl md:text-7xl'>Vibe<span className='text-teal-500 bold'>Scribe</span></h1>

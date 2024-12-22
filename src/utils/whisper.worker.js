@@ -8,7 +8,7 @@ class MyTranscriptionPipeline {
 
     static async getInstance(progress_callback = null) {
         if(this.instance === null) {
-            this.instance = await pipeline(this.task, null, {
+            this.instance = await pipeline(this.task, this.model, {
                 progress_callback })
         }
 
@@ -126,7 +126,7 @@ class GenerationTracker {
         );
 
         this.processed_chunks = chunks.map((chunk, index) => {
-            return this.processed_chunks(chunk, index);
+            return this.processChunk(chunk, index);
         });
 
         createResultMessage(

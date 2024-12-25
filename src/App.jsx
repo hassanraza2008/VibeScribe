@@ -30,7 +30,7 @@ function App() {
       });
     }
 
-    const onMessageReceivced = async (e) => {
+    const onMessageReceived = async (e) => {
       switch (e.data.type) {
         case 'DOWNLOADING': 
           setDownloading(true)
@@ -50,9 +50,9 @@ function App() {
       }
     }
 
-    worker.current.addEventListener('message', onMessageReceivced)
+    worker.current.addEventListener('message', onMessageReceived)
 
-    return () => worker.current.removeEventListener('message', onMessageReceivced)
+    return () => worker.current.removeEventListener('message', onMessageReceived)
   }, [])
 
   async function readAudioFrom(file) {
@@ -69,7 +69,7 @@ function App() {
     if(!file && !audioStream) {return}
 
     let audio = await readAudioFrom(file ? file : audioStream);
-    const model_name = `open-ai/whisper-tiny.en`;
+    const model_name = `openai/whisper-tiny.en`;
 
     worker.current.postMessage({
       type: MessageTypes.INFERENCE_REQUEST,

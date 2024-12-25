@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Transcription from "./Transcription";
 import Translation from "./Translation";
 
@@ -8,6 +8,38 @@ export default function Information(props) {
   const [translation, setTranslation] = useState(null);
   const [toLanguage, setToLanguage] = useState('Select language');
   const [translating, setTranslating] = useState(null);
+
+  const worker = useRef();
+
+  useEffect(() => {
+    if(!worker.current) {
+      worker.current = new Worker(new URL('./utils/translate.worker.js', import.meta.url), {
+        type: 'module'
+      });
+    }
+    
+    const onMessageReceivced = async (e) => {
+      switch (e.data.type) {
+        case 'initiate': 
+          console.log('DOWNLOADING')
+          break;
+        case 'progress': 
+          break;
+        case 'update': 
+          setTranslation(e.data.results)
+          console.log(e.data.results)
+          break;
+        case 'complete': 
+          setTranslating(false)
+          console.log('DONE')
+          break;
+      }
+    }
+
+    worker.current.addEventListener('message', onMessageReceivced)
+
+    return () => worker.current.removeEventListener('message', onMessageReceivced)
+  }, []);
 
   function handleCopy() {
     navigator.clipboard.writeText(output);
@@ -23,7 +55,17 @@ export default function Information(props) {
   }
 
   function generateTranslation() {
+    if(translating || toLanguage === 'Select language') {
+      return;
+    }
 
+    setTranslating(true);
+
+    worker.current.postMessage({
+      text: output.map(val => val.text),
+      src_language: 'eng_latin',
+      tgt_lang: toLanguage
+    })
   }
 
   const textElement = tab === 'transcription' ? output.map(val => val.text) : '';
@@ -42,7 +84,7 @@ export default function Information(props) {
       {tab === 'transcription' ? (
         <Transcription {...props} textElement={textElement}/>
       ) : (
-        <Translation {...props} toLanguage={toLanguage} translating={translating} translation={translation} setTranslating={setTranslating} setTranslation={setTranslation} setToLanguage={setToLanguage}/>
+        <Translation {...props} toLanguage={toLanguage} translating={translating} textElement={textElement} setTranslating={setTranslating} setTranslation={setTranslation} setToLanguage={setToLanguage} generateTranslation={generateTranslation}/>
       )}
     </div> 
     <div className="flex items-center gap-4 mx-auto">

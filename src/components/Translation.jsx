@@ -3,18 +3,16 @@ import { LANGUAGES } from "../utils/presets";
 
 export default function Translation(props) {
   const {
-    translation,
     textElement,
     toLanguage,
     translating,
-    setTranslation,
-    setTranslating,
     setToLanguage,
+    generateTranslation 
   } = props;
 
   return (
     <div className="flex flex-col gap-2 max-w-[400px] w-full mx-auto">
-      <div className="flex flex-col gap-1">
+      {!translating && (<div className="flex flex-col gap-1">
         <p className="text-xs sm:text-sm font-medium text-slate-500 mr-auto">To language</p>
         <div className="flex items-stretch gap-2">
           <select
@@ -31,11 +29,19 @@ export default function Translation(props) {
               );
             })}
           </select>
-          <button className="specialBtn px-3 py-2 rounded-lg text-blue-400 hover:text-blue-600 duration-200">
+          <button onClick={generateTranslation} className="specialBtn px-3 py-2 rounded-lg text-blue-400 hover:text-blue-600 duration-200">
             Translate
           </button>
         </div>
-      </div>
+      </div>)}
+      {(textElement && !translating) && (
+        <p>{textElement}</p>
+      )}
+      {translating && (
+        <div className="grid place-items-center">
+          <i className="fa-solid fa-spinner animate-spin"></i>
+        </div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { MessageTypes } from "./presets";
 
 class MyTranscriptionPipeline {
     static task = 'automatic-speech-recognition';
-    static model = 'open-ai/whisper-tiny.en';
+    static model = 'openai/whisper-tiny.en';
     static instance = null;
 
     static async getInstance(progress_callback = null) {
@@ -102,13 +102,13 @@ class GenerationTracker {
         } 
 
         const bestBeam = beams[0];
-        let text = this.pipeline.tokenizer.decode(bestBeam.output_tokens_ids, {
+        let text = this.pipeline.tokenizer.decode(bestBeam.output_token_ids, {
             skip_special_tokens: true
         });
 
         const result = {
             text, 
-            start: this.getLastChunkTimeStamp(),
+            start: this.getLastChunkTimestamp(),
             end: undefined
         }
 
@@ -130,11 +130,11 @@ class GenerationTracker {
         });
 
         createResultMessage(
-            this.processed_chunks, false, this.getLastChunkTimeStamp()
+            this.processed_chunks, false, this.getLastChunkTimestamp()
         );
     }
 
-    getLastChunkTimeStamp() {
+    getLastChunkTimestamp() {
         if(this.processed_chunks.length === 0) {
             return 0;
         }

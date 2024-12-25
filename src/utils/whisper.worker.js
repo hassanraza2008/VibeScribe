@@ -8,7 +8,7 @@ class MyTranscriptionPipeline {
 
     static async getInstance(progress_callback = null) {
         if(this.instance === null) {
-            this.instance = await pipeline(this.task, this.model, {
+            this.instance = await pipeline(this.task, null, {
                 progress_callback })
         }
 
@@ -25,7 +25,7 @@ self.addEventListener('message', async (e) => {
 })
 
 async function transcribe(audio) {
-    sendLoadingMessage('Loading');
+    sendLoadingMessage('loading');
 
     let pipeline;
 

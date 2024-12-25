@@ -1,8 +1,9 @@
 import React from 'react'
 
 export default function Transcription(props) {
-  const { output } = props;
+  const { textElement } = props;
+
   return (
-    <div>{output}</div>
+    <div>{textElement}</div>
   )
 }

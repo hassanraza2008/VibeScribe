@@ -13,12 +13,12 @@ export default function Information(props) {
 
   useEffect(() => {
     if(!worker.current) {
-      worker.current = new Worker(new URL('./utils/translate.worker.js', import.meta.url), {
+      worker.current = new Worker(new URL('../utils/translate.worker.js', import.meta.url), {
         type: 'module'
       });
     }
     
-    const onMessageReceivced = async (e) => {
+    const onMessageReceived = async (e) => {
       switch (e.data.type) {
         case 'initiate': 
           console.log('DOWNLOADING')
@@ -26,8 +26,8 @@ export default function Information(props) {
         case 'progress': 
           break;
         case 'update': 
-          setTranslation(e.data.results)
-          console.log(e.data.results)
+          setTranslation(e.data.output)
+          console.log(e.data.output)
           break;
         case 'complete': 
           setTranslating(false)
@@ -36,20 +36,22 @@ export default function Information(props) {
       }
     }
 
-    worker.current.addEventListener('message', onMessageReceivced)
+    worker.current.addEventListener('message', onMessageReceived)
 
-    return () => worker.current.removeEventListener('message', onMessageReceivced)
+    return () => worker.current.removeEventListener('message', onMessageReceived)
   }, []);
 
+  const textElement = tab === 'transcription' ? output.map(val => val.text) : translation || 'No translation';
+
   function handleCopy() {
-    navigator.clipboard.writeText(output);
+    navigator.clipboard.writeText(textElement);
   }
 
   function handleDownload() {
     const element = document.createElement('a');
-    const file = new Blob([], { type: 'text/plain' });
+    const file = new Blob([textElement], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download(`VibeScribe_${(new Date()).toDateString()}.txt`);
+    element.download = `VibeScribe_${new Date().toString()}.txt`;
     document.body.appendChild(element);
     element.click();
   }
@@ -63,12 +65,11 @@ export default function Information(props) {
 
     worker.current.postMessage({
       text: output.map(val => val.text),
-      src_language: 'eng_latin',
+      src_lang: 'eng_Latn',
       tgt_lang: toLanguage
     })
   }
 
-  const textElement = tab === 'transcription' ? output.map(val => val.text) : '';
 
   return (
   <main className="flex-1 p-4 flex flex-col gap-3 sm:gap-4 text-center justify-center pb-20 max-w-prose w-full mx-auto">
@@ -88,10 +89,10 @@ export default function Information(props) {
       )}
     </div> 
     <div className="flex items-center gap-4 mx-auto">
-      <button title="Copy" className="bg-white hover:text-teal-600 duration-200 text-teal-400 px-2 rounded aspect-square grid place-items-center">
+      <button onClick={handleCopy} title="Copy" className="bg-white hover:text-teal-600 duration-200 text-teal-400 px-2 rounded aspect-square grid place-items-center">
         <i className="fa-solid fa-copy"></i>
       </button>
-      <button title="Download" className="bg-white hover:text-teal-600 duration-200 text-teal-400 px-2 rounded aspect-square grid place-items-center">
+      <button onClick={handleDownload} title="Download" className="bg-white hover:text-teal-600 duration-200 text-teal-400 px-2 rounded aspect-square grid place-items-center">
         <i className="fa-solid fa-download"></i>
       </button>
     </div>

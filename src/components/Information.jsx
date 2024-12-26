@@ -3,11 +3,12 @@ import Transcription from "./Transcription";
 import Translation from "./Translation";
 
 export default function Information(props) {
-  const { output } = props;
+  const { output, finished } = props;
   const [tab, setTab] = useState("transcription")
   const [translation, setTranslation] = useState(null);
   const [toLanguage, setToLanguage] = useState('Select language');
   const [translating, setTranslating] = useState(null);
+  console.log(output);
 
   const worker = useRef();
 
@@ -19,11 +20,12 @@ export default function Information(props) {
     }
     
     const onMessageReceived = async (e) => {
-      switch (e.data.type) {
+      switch (e.data.status) {
         case 'initiate': 
           console.log('DOWNLOADING')
           break;
         case 'progress': 
+          console.log('LOADING')
           break;
         case 'update': 
           setTranslation(e.data.output)
@@ -41,7 +43,7 @@ export default function Information(props) {
     return () => worker.current.removeEventListener('message', onMessageReceived)
   }, []);
 
-  const textElement = tab === 'transcription' ? output.map(val => val.text) : translation || 'No translation';
+  const textElement = tab === 'transcription' ? output.map(val => val.text) : translation || '';
 
   function handleCopy() {
     navigator.clipboard.writeText(textElement);
@@ -77,11 +79,16 @@ export default function Information(props) {
       Your <span className="text-teal-500 bold">Transcription</span>
     </h1>
 
-    <div className="grid grid-cols-2 mx-auto bg-white shadow rounded-full overflow-hidden items-center">
-      <button onClick={() => setTab("transcription")} className={"px-4 duration-200 py-1 " + (tab === "transcription" ? ' bg-teal-400 text-white' : ' text-teal-400')}>Transcription</button>
-      <button onClick={() => setTab("translation")} className={"px-4 duration-200 py-2 font-medium " + (tab === "translation" ? ' bg-teal-400 text-white' : ' text-teal-400')}>Translation</button>
+    <div className="grid grid-cols-2 sm:mx-auto bg-white blueShadow rounded overflow-hidden items-center p-1 border-[2px] border-solid border-teal-300">
+      <button onClick={() => setTab("transcription")} className={"px-4 rounded duration-200 py-1 " + (tab === "transcription" ? ' bg-teal-400 text-white' : ' text-teal-400 hover:text-teal-600')}>Transcription</button>
+      <button onClick={() => setTab("translation")} className={"px-4 rounded duration-200 py-1 " + (tab === "translation" ? ' bg-teal-400 text-white' : ' text-teal-400 hover:text-teal-600')}>Translation</button>
     </div>
-    <div className="my-8 flex flex-col">
+    <div className="my-8 flex flex-col-reverse max-w-prose w-full mx-auto gap-4">
+      {(!finished || translating) && (
+        <div className="grid place-items-center">
+          <i className="fa-solid fa-spinner animate-spin"></i>
+        </div>
+      )}
       {tab === 'transcription' ? (
         <Transcription {...props} textElement={textElement}/>
       ) : (

@@ -75,7 +75,7 @@ export default function HomePage(props) {
         <button onClick={recordingStatus === 'recording' ? stopRecording : startRecording} className='flex specialBtn px-4 py-2 rounded-xl items-center text-base justify-between gap-4 mx-auto w-72 max-w-full my-4'>
             <p className='text-teal-400'>{recordingStatus === 'inactive' ? 'Record' : `Stop Recording`}</p>
             <div className="flex items-center gap-2">
-              {duration && (
+              {(duration > 0) && (
                 <p className='text-sm '>{duration}s</p>
               )}
               <i className={"fa-solid fa-microphone duration-200" + (recordingStatus === 'recording' ? ' text-rose-300' : '')}></i>
@@ -84,7 +84,7 @@ export default function HomePage(props) {
         <p className='text-base'>Or <label className='text-teal-300 cursor-pointer hover:text-teal-500 duration-200'>upload <input onChange={(e) => {
             const tempFile = e.target.files[0];
             setFile(tempFile);
-        }} className='hidden' type='file' accept='.mp3, .wav' /></label> a mp3 file</p>
+        }} className='hidden' type='file' accept='.mp3, .wave' /></label> a mp3 file</p>
         <p className='italic text-slate-400'>Free now free forever</p>
     </main>
   )

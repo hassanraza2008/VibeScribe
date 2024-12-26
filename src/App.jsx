@@ -53,7 +53,7 @@ function App() {
     worker.current.addEventListener('message', onMessageReceived)
 
     return () => worker.current.removeEventListener('message', onMessageReceived)
-  }, [])
+  })
 
   async function readAudioFrom(file) {
     const sampling_rate = 16000;
@@ -82,11 +82,11 @@ function App() {
       <section className='min-h-screen flex flex-col'>
         <Header/>
         {output ? (
-          <Information output={output}/>
+          <Information output={output} finished={finished}/>
         ) : loading ? (
           <Transcribing/>
         ) : isAudioAvailable ? (
-          <FileDisplay handleFormSubmission={handleFormSubmission} handleAudioReset={handleAudioReset} file={file} audioStream={setAudioStream} />  
+          <FileDisplay handleFormSubmission={handleFormSubmission} handleAudioReset={handleAudioReset} file={file} audioStream={audioStream} />  
         ) : (
           <HomePage setFile={setFile} setAudioStream={setAudioStream}/>
         )}

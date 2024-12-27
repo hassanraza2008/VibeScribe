@@ -79,7 +79,7 @@ export default function Information(props) {
       Your <span className="text-teal-500 bold">Transcription</span>
     </h1>
 
-    <div className="grid grid-cols-2 sm:mx-auto bg-white blueShadow rounded overflow-hidden items-center p-1 border-[2px] border-solid border-teal-300">
+    <div className="grid grid-cols-2 sm:mx-auto bg-white tealShadow rounded overflow-hidden items-center p-1 border-[2px] border-solid border-teal-300">
       <button onClick={() => setTab("transcription")} className={"px-4 rounded duration-200 py-1 " + (tab === "transcription" ? ' bg-teal-400 text-white' : ' text-teal-400 hover:text-teal-600')}>Transcription</button>
       <button onClick={() => setTab("translation")} className={"px-4 rounded duration-200 py-1 " + (tab === "translation" ? ' bg-teal-400 text-white' : ' text-teal-400 hover:text-teal-600')}>Translation</button>
     </div>
